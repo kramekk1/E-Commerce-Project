@@ -1,6 +1,5 @@
 package service;
 
-import model.Color;
 import model.Product;
 
 import java.util.ArrayList;

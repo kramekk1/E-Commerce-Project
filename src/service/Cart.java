@@ -7,9 +7,11 @@ import java.util.List;
 
 public class Cart {
     private List<Product> productsInCart;
+    private List<Product> orderedItems;
 
     public Cart() {
         productsInCart = new ArrayList<>();
+        orderedItems = new ArrayList<>();
     }
 
     public void addProductToCart(Product product) {
@@ -29,9 +31,9 @@ public class Cart {
     }
 
     public List<Product> createdOrder() {
-        List<Product> orderedItems;
-        orderedItems = productsInCart;
-        clearCart();
+        if (!productsInCart.isEmpty()) {
+            orderedItems = productsInCart;
+        }
         return orderedItems;
     }
 

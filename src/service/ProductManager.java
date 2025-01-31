@@ -14,8 +14,8 @@ public class ProductManager {
     }
 
     public void addProductToShop(Product product) {
-        System.out.println("Pomyślnie dodano produkt ID: " + product.getId() + " // " + product.getName() + " // ");
         productsInShop.add(product);
+        System.out.println("Pomyślnie dodano produkt ID: " + product.getId() + " // " + product.getName() + " // ");
     }
 
     public void removeProductFromShopById(String id) {

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Product {
     private String id;
     private String name;
@@ -20,6 +22,19 @@ public class Product {
                 ", price=" + price +
                 ", availableCount=" + availableCount +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Double.compare(price, product.price) == 0 && availableCount == product.availableCount && Objects.equals(id, product.id) && Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, availableCount);
     }
 
     public String getId() {
@@ -53,5 +68,6 @@ public class Product {
     public void setAvailableCount(int availableCount) {
         this.availableCount = availableCount;
     }
+
 
 }

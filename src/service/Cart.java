@@ -6,48 +6,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-    private List<Product> products;
-    private List<Computer> computers;
-    private List<Smartphone> smartphones;
-    private List<Electronics> electronics;
+    private List<Product> productsInCart;
 
     public Cart() {
-        products = new ArrayList<>();
-        computers = new ArrayList<>();
-        smartphones = new ArrayList<>();
-        electronics = new ArrayList<>();
+        productsInCart = new ArrayList<>();
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public void addProductToCart(Product product) {
+        productsInCart.add(product);
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void removeProductFromCart(Product product) {
+        productsInCart.removeIf(product::equals);
     }
 
-    public List<Computer> getComputers() {
-        return computers;
+    public void clearCart() {
+        productsInCart.clear();
     }
 
-    public void setComputers(List<Computer> computers) {
-        this.computers = computers;
+    public void showCartContents() {
+        productsInCart.forEach(System.out::println);
     }
 
-    public List<Smartphone> getSmartphones() {
-        return smartphones;
+    public List<Product> createOrder() {
+        List<Product> orderedItems;
+        orderedItems = productsInCart;
+        clearCart();
+        return orderedItems;
     }
 
-    public void setSmartphones(List<Smartphone> smartphones) {
-        this.smartphones = smartphones;
+    public List<Product> getProductsInCart() {
+        return productsInCart;
     }
 
-    public List<Electronics> getElectronics() {
-        return electronics;
-    }
-
-    public void setElectronics(List<Electronics> electronics) {
-        this.electronics = electronics;
+    public void setProductsInCart(List<Product> productsInCart) {
+        this.productsInCart = productsInCart;
     }
 
 }

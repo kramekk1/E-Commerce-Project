@@ -28,7 +28,7 @@ public class Cart {
         productsInCart.forEach(System.out::println);
     }
 
-    public List<Product> createOrder() {
+    public List<Product> createdOrder() {
         List<Product> orderedItems;
         orderedItems = productsInCart;
         clearCart();

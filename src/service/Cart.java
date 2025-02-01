@@ -7,11 +7,9 @@ import java.util.List;
 
 public class Cart {
     private List<Product> productsInCart;
-    private List<Product> orderedItems;
 
     public Cart() {
         productsInCart = new ArrayList<>();
-        orderedItems = new ArrayList<>();
     }
 
     public void addProductToCart(Product product) {
@@ -30,12 +28,12 @@ public class Cart {
         productsInCart.forEach(System.out::println);
     }
 
-    public List<Product> createdOrder() {
-        if (!productsInCart.isEmpty()) {
-            orderedItems = productsInCart;
-        }
-        return orderedItems;
-    }
+//    public List<Product> createdOrder() {
+//        if (!productsInCart.isEmpty()) {
+//            orderedItems = productsInCart;
+//        }
+//        return orderedItems;
+//    }
 
     public List<Product> getProductsInCart() {
         return productsInCart;

@@ -13,8 +13,9 @@ public class Order {
     private String street;
     private int homeNumber;
     private String telephoneNumber;
+    private Cart cartContent;
 
-    public Order(String orderId, String customerFirstName, String customerLastName, String destinationCity, String postCode, String street, int homeNumber, String telephoneNumber) {
+    public Order(String orderId, String customerFirstName, String customerLastName, String destinationCity, String postCode, String street, int homeNumber, String telephoneNumber, Cart cartContent) {
         this.orderId = orderId;
         this.customerFirstName = customerFirstName;
         this.customerLastName = customerLastName;
@@ -23,24 +24,24 @@ public class Order {
         this.street = street;
         this.homeNumber = homeNumber;
         this.telephoneNumber = telephoneNumber;
+        this.cartContent = cartContent;
     }
 
     public double calculateTotalPrice(Cart cart) {
-        return cart.createdOrder().stream()
+        return cart.getProductsInCart().stream()
                 .map(Product::getPrice)
                 .reduce(0.0, Double::sum);
     }
-    public void prepareOrderToProcess(Cart cart) {
+    public void prepareOrderToProcess() {
         System.out.println("Przetwarzanie zawartości koszyka...");
-        cart.showCartContents();
-        System.out.println("Całkowita cena: " + calculateTotalPrice(cart));
-        cart.clearCart();
+        cartContent.showCartContents();
+        System.out.println("Całkowita cena: " + calculateTotalPrice(cartContent));
     }
-    public void showOrderInfo(Cart cart) {
+    public void showOrderInfo() {
         System.out.println("Zawartość koszyka: ");
-        cart.showCartContents();
-        System.out.println("Całkowita cena: " + calculateTotalPrice(cart));
-        System.out.println("Dane do zamówienia: " + this);
+        cartContent.showCartContents();
+        System.out.println("Całkowita cena: " + calculateTotalPrice(cartContent));
+        System.out.println("Dane do zamówienia: " + Order.this);
     }
 
     @Override
@@ -119,5 +120,13 @@ public class Order {
 
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public Cart getCartContent() {
+        return cartContent;
+    }
+
+    public void setCartContent(Cart cartContent) {
+        this.cartContent = cartContent;
     }
 }

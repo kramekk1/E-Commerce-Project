@@ -2,8 +2,6 @@ package service;
 
 import model.Product;
 
-import java.awt.*;
-
 public class Order {
     private String orderId;
     private String customerFirstName;

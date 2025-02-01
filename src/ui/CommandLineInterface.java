@@ -6,7 +6,10 @@ import service.Order;
 import service.OrderProcessor;
 import service.ProductManager;
 
+import java.time.LocalDateTime;
+
 public class CommandLineInterface {
+    private final LocalDateTime localDateTime = LocalDateTime.now();
     public ProductManager productManager = new ProductManager();
     public Cart cartManager = new Cart();
     public OrderProcessor orderProcessor = new OrderProcessor();
@@ -27,5 +30,7 @@ public class CommandLineInterface {
     }
     public void sendOrder(Order order) {
         orderProcessor.processOrder(order);
+        System.out.println("Zamówienie o ID: " + order.getOrderId() + " zostało złożone");
+        System.out.println("Czas: " + localDateTime);
     }
 }

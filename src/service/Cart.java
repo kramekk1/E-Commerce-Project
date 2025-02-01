@@ -20,10 +20,6 @@ public class Cart {
         productsInCart.removeIf(product::equals);
     }
 
-    public void clearCart() {
-        productsInCart.clear();
-    }
-
     public void showCartContents() {
         productsInCart.forEach(System.out::println);
     }

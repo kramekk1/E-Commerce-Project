@@ -34,4 +34,12 @@ public class OrderProcessor {
             generateInvoice(order);
         }
     }
+
+    public List<Order> getPlacedOrder() {
+        return placedOrder;
+    }
+
+    public void setPlacedOrder(List<Order> placedOrder) {
+        this.placedOrder = placedOrder;
+    }
 }

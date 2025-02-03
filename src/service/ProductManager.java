@@ -13,9 +13,17 @@ public class ProductManager {
         productsInShop = new ArrayList<>();
     }
 
-    public void addProductToShop(Product product) {
-        productsInShop.add(product);
-        System.out.println("Pomyślnie dodano produkt ID: " + product.getId() + " // " + product.getName() + " // ");
+    public void addProductToShop(Product product) throws DuplicateIdException {
+        if (isIdAlreadyExist(product)) {
+            throw new DuplicateIdException("ID produktu, który próbujesz dodać już istnieje!");
+        } else {
+            productsInShop.add(product);
+            System.out.println("Pomyślnie dodano produkt ID: " + product.getId() + " // " + product.getName() + " // ");
+        }
+    }
+    public boolean isIdAlreadyExist(Product product) {
+        return productsInShop.stream()
+                .anyMatch(p -> p.getId().equals(product.getId()));
     }
 
     public void removeProductFromShopById(String id) {

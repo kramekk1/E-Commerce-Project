@@ -35,25 +35,21 @@ public class Order {
         cartContent.showCartContents();
         System.out.println("Całkowita cena: " + calculateTotalPrice(cartContent));
     }
-    public void showOrderInfo() {
+    public void showOrderPaymentInfo() {
         System.out.println("Zawartość koszyka: ");
         cartContent.showCartContents();
         System.out.println("Całkowita cena: " + calculateTotalPrice(cartContent));
-        System.out.println("Dane do zamówienia: " + Order.this);
     }
 
     @Override
     public String toString() {
-        return "Order{" +
-                "orderId='" + orderId + '\'' +
-                ", customerFirstName='" + customerFirstName + '\'' +
-                ", customerLastName='" + customerLastName + '\'' +
-                ", destinationCity='" + destinationCity + '\'' +
-                ", postCode='" + postCode + '\'' +
-                ", street='" + street + '\'' +
-                ", homeNumber=" + homeNumber +
-                ", telephoneNumber='" + telephoneNumber + '\'' +
-                '}';
+        return "ID: " + orderId + ", Imie: " + customerFirstName +
+                ", Nazwisko: " + customerLastName +
+                ", Miasto: " + destinationCity +
+                ", Kod pocztowy: " + postCode +
+                ", Ulica: " + street +
+                ", Numer domu/mieszkania: " + homeNumber +
+                ", Numer telefonu: " + telephoneNumber;
     }
 
     public String getOrderId() {

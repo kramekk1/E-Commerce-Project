@@ -1,5 +1,8 @@
 package service;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -13,6 +16,7 @@ public class OrderProcessor {
         placedOrder = new ArrayList<>();
         invoiceMap = new HashMap<>();
     }
+
     public String generateInvoice(Order order) {
 //        System.out.println("=======================================");
 //        System.out.println("Numer zamówienia: " + order.getOrderId());
@@ -40,8 +44,9 @@ public class OrderProcessor {
                 "Przedmioty: " + order.getCartContent() + "\n" +
                 "=======================================";
     }
+
     public String generateReceiptForCustomer(Order order) {
-        return  "===============PARAGON===============" + "\n" +
+        return "===============PARAGON===============" + "\n" +
                 "Numer zamówienia: " + order.getOrderId() + "\n" +
                 "Data: " + localDateTime + "\n" +
                 "---------------------------------------" + "\n" +
@@ -50,6 +55,8 @@ public class OrderProcessor {
 
     public void processOrder(Order order) {
         placedOrder.add(order);
+        savePlacedOrderToFile(order);
+
         System.out.println("Czy wygenerować fakturę do zamówienia? Podaj T/N");
         if (userInput.nextLine().equalsIgnoreCase("t")) {
             System.out.println(generateInvoice(order));
@@ -58,9 +65,21 @@ public class OrderProcessor {
             System.out.println(generateReceiptForCustomer(order));
         }
     }
+
+    public void savePlacedOrderToFile(Order order) {
+        String placedOrderFilePath = "src/orders.txt";
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(placedOrderFilePath, true))
+        ) {
+            bufferedWriter.write(order.toString());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void putInvoiceToMap(Order order) {
         invoiceMap.put(order.getOrderId(), generateInvoice(order));
     }
+
     public void searchInvoiceById(String id) {
         for (Map.Entry<String, String> entry : invoiceMap.entrySet()) {
             if (id.equalsIgnoreCase(entry.getKey())) {
@@ -68,6 +87,7 @@ public class OrderProcessor {
             }
         }
     }
+
     public void removeInvoiceFromMapById(String id) {
         for (Map.Entry<String, String> entry : invoiceMap.entrySet()) {
             if (id.equalsIgnoreCase(entry.getKey())) {

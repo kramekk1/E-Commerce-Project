@@ -68,6 +68,7 @@ public class OrderProcessor {
 
     public void savePlacedOrderToFile(Order order) {
         String placedOrderFilePath = "src/orders.txt";
+
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(placedOrderFilePath, true))
         ) {
             bufferedWriter.write(order.toString());

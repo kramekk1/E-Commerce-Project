@@ -3,7 +3,7 @@ package service;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -11,7 +11,7 @@ public class OrderProcessor {
     private List<Order> placedOrder;
     //private Map<String, String> invoiceMap;
     public Scanner userInput = new Scanner(System.in);
-    private final LocalDateTime localDateTime = LocalDateTime.now();
+    private final ZonedDateTime zonedDateTime = ZonedDateTime.now();
 
     public OrderProcessor() {
         placedOrder = new ArrayList<>();
@@ -21,7 +21,7 @@ public class OrderProcessor {
     public String generateInvoice(Order order) {
         return "=======================================" + "\n" +
                 "Numer zamówienia: " + order.getOrderId() + "\n" +
-                "Data: " + localDateTime + "\n" +
+                "Data: " + zonedDateTime + "\n" +
                 "---------------------------------------" + "\n" +
                 "Sprzedawca:" + "\n" + "E-Commerce sklep" + "\n" +
                 "---------------------------------------" + "\n" +
@@ -38,7 +38,7 @@ public class OrderProcessor {
     public String generateReceiptForCustomer(Order order) {
         return "===============PARAGON===============" + "\n" +
                 "Numer zamówienia: " + order.getOrderId() + "\n" +
-                "Data: " + localDateTime + "\n" +
+                "Data: " + zonedDateTime + "\n" +
                 "---------------------------------------" + "\n" +
                 "Przedmioty: " + order.getCartContent();
     }
@@ -85,7 +85,7 @@ public class OrderProcessor {
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(placedOrderFilePath, true))
         ) {
-            bufferedWriter.write(order.toString() + " //Przedmioty: " + order.getCartContent().getProductsInCart() + " //Data złożenia: " + localDateTime + " //Całkowita cena: " + order.getCartContent().calculateTotalPrice() + "\n");
+            bufferedWriter.write(order.toString() + " //Przedmioty: " + order.getCartContent().getProductsInCart() + " //Data złożenia: " + zonedDateTime + " //Całkowita cena: " + order.getCartContent().calculateTotalPrice() + "\n");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

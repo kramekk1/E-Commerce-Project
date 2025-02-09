@@ -64,6 +64,4 @@ public class Product {
     public void setAvailableCount(int availableCount) {
         this.availableCount = availableCount;
     }
-
-
 }

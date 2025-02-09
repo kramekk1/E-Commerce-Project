@@ -6,7 +6,6 @@ import service.*;
 import java.util.Random;
 import java.util.Scanner;
 
-
 public class CommandLineInterface {
     private ProductManager productManager = new ProductManager();
     private Cart cartManager = new Cart();
@@ -152,6 +151,7 @@ public class CommandLineInterface {
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////
     public boolean isPromotion() {
         return promotion;
     }

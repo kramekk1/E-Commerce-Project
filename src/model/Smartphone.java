@@ -12,7 +12,6 @@ public class Smartphone extends Product{
         this.addonAccessory = addonAccessory;
     }
 
-
     @Override
     public String toString() {
         return super.toString() + " Kolor: " + color.getDescription() + " Pojemność baterii: " + batteryCapacity.getDescription() + " Akcesoria w zestawie: " + addonAccessory.getDescription();

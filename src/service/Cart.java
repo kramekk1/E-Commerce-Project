@@ -53,13 +53,6 @@ public class Cart {
         productsInCart.forEach(System.out::println);
     }
 
-//    public List<Product> createdOrder() {
-//        if (!productsInCart.isEmpty()) {
-//            orderedItems = productsInCart;
-//        }
-//        return orderedItems;
-//    }
-
     public List<Product> getProductsInCart() {
         return productsInCart;
     }

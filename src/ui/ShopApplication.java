@@ -2,7 +2,6 @@ package ui;
 
 import model.*;
 import service.DuplicateIdException;
-import service.ProductManager;
 
 import java.util.Scanner;
 

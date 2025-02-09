@@ -41,5 +41,4 @@ public enum Processor {
             default -> config();
         };
     }
-
 }

@@ -1,7 +1,6 @@
 package model;
 
 import java.util.Scanner;
-import java.util.zip.CRC32;
 
 public enum Ram {
     KINGSTON_4GB("Kingston ValueRAM, DDR3, 4 GB, 1600MHz", 300), CORSAIR_4GB("Corsair Vengeance LPX, DDR4, 4 GB, 2400MHz", 600),

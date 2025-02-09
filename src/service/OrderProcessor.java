@@ -41,7 +41,8 @@ public class OrderProcessor {
                 "      " + order.getStreet() + " " + order.getHomeNumber() + "\n" +
                 "Numer telefonu: " + order.getTelephoneNumber() + "\n" +
                 "---------------------------------------" + "\n" +
-                "Przedmioty: " + order.getCartContent() + "\n" +
+                "Przedmioty: " + order.getCartContent().getProductsInCart() + "\n" +
+                "Całkowita cena: "+ order.getCartContent().calculateTotalPrice() + "\n" +
                 "=======================================";
     }
 
@@ -67,11 +68,11 @@ public class OrderProcessor {
     }
 
     public void savePlacedOrderToFile(Order order) {
-        String placedOrderFilePath = "src/orders.txt";
+        String placedOrderFilePath = "src/files/orders.txt";
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(placedOrderFilePath, true))
         ) {
-            bufferedWriter.write(order.toString());
+            bufferedWriter.write(order.toString() + " //Przedmioty: " + order.getCartContent().getProductsInCart() + " //Data złożenia: " + localDateTime + " //Całkowita cena: " + order.getCartContent().calculateTotalPrice() +"\n");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -113,4 +114,5 @@ public class OrderProcessor {
     public void setInvoiceMap(Map<String, String> invoiceMap) {
         this.invoiceMap = invoiceMap;
     }
+
 }

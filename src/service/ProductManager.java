@@ -1,10 +1,11 @@
 package service;
 
-import model.Product;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class ProductManager {
     private List<Product> productsInShop;
@@ -13,13 +14,39 @@ public class ProductManager {
         productsInShop = new ArrayList<>();
     }
 
-    public void addProductToShop(Product product) throws DuplicateIdException {
+    public void adminAdd(Product product) {
+        productsInShop.add(product);
+    }
+    public void addProductToShop() throws DuplicateIdException {
+        Product product = configurateProduct();
         if (isIdAlreadyExist(product)) {
             throw new DuplicateIdException("ID produktu, który próbujesz dodać już istnieje!");
         } else {
             productsInShop.add(product);
             System.out.println("Pomyślnie dodano produkt ID: " + product.getId() + " // " + product.getName() + " // ");
         }
+    }
+    public Product configurateProduct() {
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Podaj ID: ");
+        String id = userInput.nextLine();
+        System.out.println("Podaj nazwe: ");
+        String name = userInput.nextLine();
+        System.out.println("Podaj cenę: ");
+        double price = userInput.nextDouble();
+        System.out.println("Podaj liczbę sztuk: ");
+        int availableCount = userInput.nextInt();
+
+        System.out.println("Komputer, Smartfon czy Elektronika?");
+        userInput.nextLine();
+        String choice = userInput.nextLine().toLowerCase();
+
+        return switch (choice) {
+            case "komputer" -> new Computer(id, name, price, availableCount, Processor.NONE, Ram.NONE);
+            case "smartfon" -> new Smartphone(id, name, Color.NONE, BatteryCapacity.NONE, Accessories.NONE, price, availableCount);
+            case "elektronika" -> new Electronics(id, name, price, availableCount);
+            default -> new Product(id, name, price, availableCount);
+        };
     }
     public boolean isIdAlreadyExist(Product product) {
         return productsInShop.stream()
@@ -33,7 +60,7 @@ public class ProductManager {
 
     public void showProductsInShop() {
         System.out.println("Wszystkie produkty w sklepie: ");
-        productsInShop.forEach(System.out::println);
+        productsInShop.forEach(product -> System.out.println(product + " ///Dostępna ilość sztuk: " + product.getAvailableCount()));
     }
 
     public Optional<Product> findedProductById(String id) {

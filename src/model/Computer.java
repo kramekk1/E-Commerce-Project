@@ -13,7 +13,7 @@ public class Computer extends Product {
 
     @Override
     public String toString() {
-        return super.toString() + "Model procesora: " + processorModel.getDescription() + " Ilość RAM: " + ramType.getDescription();
+        return super.toString() + " Model procesora: " + processorModel.getDescription() + " Ilość RAM: " + ramType.getDescription();
     }
 
     public Processor getProcessorModel() {

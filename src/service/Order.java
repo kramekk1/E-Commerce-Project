@@ -25,20 +25,20 @@ public class Order {
         this.cartContent = cartContent;
     }
 
-    public double calculateTotalPrice(Cart cart) {
-        return cart.getProductsInCart().stream()
-                .map(Product::getPrice)
-                .reduce(0.0, Double::sum);
-    }
+//    public double calculateTotalPrice(Cart cart) {
+//        return cart.getProductsInCart().stream()
+//                .map(Product::getPrice)
+//                .reduce(0.0, Double::sum);
+//    }
     public void prepareOrderToProcess() {
         System.out.println("Przetwarzanie zawartości koszyka...");
         cartContent.showCartContents();
-        System.out.println("Całkowita cena: " + calculateTotalPrice(cartContent));
+        System.out.println("Całkowita cena: " + cartContent.calculateTotalPrice());
     }
     public void showOrderPaymentInfo() {
         System.out.println("Zawartość koszyka: ");
         cartContent.showCartContents();
-        System.out.println("Całkowita cena: " + calculateTotalPrice(cartContent));
+        System.out.println("Całkowita cena: " + cartContent.calculateTotalPrice());
     }
 
     @Override

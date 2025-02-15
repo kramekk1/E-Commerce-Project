@@ -1,5 +1,7 @@
 package service;
 
+import ui.CommandLineInterface;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +14,6 @@ public class OrderProcessor {
     //private Map<String, String> invoiceMap;
     public Scanner userInput = new Scanner(System.in);
     private final ZonedDateTime zonedDateTime = ZonedDateTime.now();
-
     public OrderProcessor() {
         placedOrder = new ArrayList<>();
         //invoiceMap = new HashMap<>();
@@ -31,7 +32,7 @@ public class OrderProcessor {
                 "Numer telefonu: " + order.getTelephoneNumber() + "\n" +
                 "---------------------------------------" + "\n" +
                 "Przedmioty: " + order.getCartContent().getProductsInCart() + "\n" +
-                "Całkowita cena: " + order.getCartContent().calculateTotalPrice() + "\n" +
+                "Całkowita cena: " + CommandLineInterface.getTotalPriceForOrder() + "\n" +
                 "=======================================";
     }
 
@@ -44,24 +45,10 @@ public class OrderProcessor {
     }
 
     public void processOrder(Order order) {
-        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             {
-                try {
-                    Thread.sleep(1000);
-                    placedOrder.add(order);
-                    savePlacedOrderToFile(order);
-                } catch (InterruptedException e) {
-                    throw new IllegalStateException(e);
-                }
-                return " Przetwarzanie: czesc 1 ";
-            }
-        });
-
-        future.thenAccept(System.out::println).join();
-
-        CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> {
-            try {
-                Thread.sleep(1000);
+                placedOrder.add(order);
+                savePlacedOrderToFile(order);
                 System.out.println("Czy wygenerować fakturę do zamówienia? Podaj T/N");
                 if (userInput.nextLine().equalsIgnoreCase("t")) {
                     System.out.println(generateInvoice(order));
@@ -69,23 +56,16 @@ public class OrderProcessor {
                 } else {
                     System.out.println(generateReceiptForCustomer(order));
                 }
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
             }
-            return " Przetwarzanie: czesc 2 ";
-        });
-
-        CompletableFuture<String> combined = future.thenCombine(future2, (result1, result2) -> result1 + result2);
-
-        combined.thenAccept(result -> System.out.println("Przetworzono dwie czesci: " + result)).join();
+        }).join();
     }
 
     public void savePlacedOrderToFile(Order order) {
-        String placedOrderFilePath = "src/files/orders.txt";
+        String placedOrderFilePath = "src/files/invoices.txt";
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(placedOrderFilePath, true))
         ) {
-            bufferedWriter.write(order.toString() + " //Przedmioty: " + order.getCartContent().getProductsInCart() + " //Data złożenia: " + zonedDateTime + " //Całkowita cena: " + order.getCartContent().calculateTotalPrice() + "\n");
+            bufferedWriter.write(order.toString() + " //Przedmioty: " + order.getCartContent().getProductsInCart() + " //Data złożenia: " + zonedDateTime + " //Całkowita cena: " + CommandLineInterface.getTotalPriceForOrder() + "\n");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

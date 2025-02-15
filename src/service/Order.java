@@ -1,5 +1,7 @@
 package service;
 
+import ui.CommandLineInterface;
+
 public class Order {
     private String orderId;
     private String customerFirstName;
@@ -26,7 +28,7 @@ public class Order {
     public void prepareOrderToProcess() {
         System.out.println("Przetwarzanie zawartości koszyka...");
         cartContent.showCartContents();
-        System.out.println("Całkowita cena: " + cartContent.calculateTotalPrice());
+        System.out.println("Całkowita cena: " + CommandLineInterface.getTotalPriceForOrder());
     }
 
     @Override

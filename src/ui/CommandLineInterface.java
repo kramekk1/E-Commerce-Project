@@ -3,6 +3,8 @@ package ui;
 import model.Product;
 import service.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,13 +14,26 @@ public class CommandLineInterface {
     private OrderProcessor orderProcessor = new OrderProcessor();
     private final Scanner scanner = new Scanner(System.in);
     private boolean promotion;
+    private int promotionPercentValue;
+    private int promotionProductCountInCart;
+    private String promotionType;
+    private static double totalPriceForOrder;
 
     public CommandLineInterface() {
+    }
+
+    public void readExistedProductsFromCsvFile() {
+        productManager.readExistedProductsFromFile(productManager.getProductsInShop(), "existedProducts.csv");
+    }
+
+    public void readCartStatusFromCsvFile() {
+        productManager.readCartStatusFromFile(cartManager.getProductsInCart(), "cart.csv");
     }
 
     public void showShopContent() {
         productManager.showProductsInShop();
     }
+
     public void addItemToCart() {
         System.out.println("Podaj ID produktu do dodania");
         String idToAdd = scanner.nextLine();
@@ -27,36 +42,82 @@ public class CommandLineInterface {
         if (product != null) {
             cartManager.addProductToCart(product);
             product.setAvailableCount(product.getAvailableCount() - 1);
-        } else {
+            productManager.saveProductsStatusToFileByList(productManager.getProductsInShop(), "existedProducts.csv");
+            productManager.saveProductsStatusToFileByList(cartManager.getProductsInCart(), "cart.csv");
+         } else {
             System.out.println("Podane ID nieistnieje");
-        }
+         }
     }
+
     public void removeItemFromCart() {
         System.out.println("Podaj ID produktu do usunięcia");
         String idToRemove = scanner.nextLine();
+
         Product product = findProductMatchingById(idToRemove);
+        long productsWithTheSameIdInCartCount = cartManager.getProductsInCart().stream()
+                .filter(prod -> prod.getId().equals(product.getId()))
+                .count();
 
         if (product != null) {
-            cartManager.removeProductFromCart(product);
-            product.setAvailableCount(product.getAvailableCount() + 1);
+            cartManager.removeProductFromCart(idToRemove);
+            product.setAvailableCount((int) (product.getAvailableCount() + productsWithTheSameIdInCartCount));
+            productManager.saveProductsStatusToFileByList(productManager.getProductsInShop(), "existedProducts.csv");
+            productManager.saveProductsStatusToFileByList(cartManager.getProductsInCart(), "cart.csv");
         } else {
             System.out.println("Podane ID nieistnieje");
         }
-
     }
+    public void clearCartByUserRequest() {
+        Map<String, Integer> idAndCountMap = new HashMap<>();
+        for (Product prod : cartManager.getProductsInCart()) {
+            idAndCountMap.merge(prod.getId(), 1, Integer::sum);
+        }
+
+        for (Map.Entry<String, Integer> entry : idAndCountMap.entrySet()) {
+            productManager.getProductsInShop().stream()
+                    .filter(product -> entry.getKey().equals(product.getId()))
+                    .forEach(product -> product.setAvailableCount(product.getAvailableCount() + entry.getValue()));
+        }
+        productManager.saveProductsStatusToFileByList(productManager.getProductsInShop(), "existedProducts.csv");
+        clearCart();
+    }
+
     public void clearCart() {
         cartManager.getProductsInCart().clear();
+        productManager.saveProductsStatusToFileByList(cartManager.getProductsInCart(), "cart.csv");
     }
+
     public void showItemsInCart() {
         cartManager.getProductsInCart().forEach(System.out::println);
     }
+
     public void orderPaymentInfo() {
+        double promotionCalc = cartManager.calculateTotalPrice() * (1 - (promotionPercentValue * 0.01));
         System.out.println("Aktualna kwota do zapłaty");
-        System.out.println(cartManager.calculateTotalPrice());
+
+        if (promotion) {
+            if (promotionType.equals("1")) {
+                System.out.println(promotionCalc);
+                totalPriceForOrder = promotionCalc;
+            }
+            if (promotionType.equals("2")) {
+                if (cartManager.getProductsInCart().size() >= promotionProductCountInCart) {
+                    System.out.println(promotionCalc);
+                    totalPriceForOrder = promotionCalc;
+                } else {
+                    System.out.println(cartManager.calculateTotalPrice());
+                    totalPriceForOrder = cartManager.calculateTotalPrice();
+                }
+            }
+        } else {
+            System.out.println(cartManager.calculateTotalPrice());
+            totalPriceForOrder = cartManager.calculateTotalPrice();
+        }
     }
+
     public Order createOrder() {
         Random orderIdGenerator = new Random();
-        String generatedId = String.valueOf(orderIdGenerator.nextInt(1000,9999));
+        String generatedId = String.valueOf(orderIdGenerator.nextInt(1000, 9999));
 
         System.out.println("Podaj dane do zamówienia");
         System.out.println("Podaj imię");
@@ -76,11 +137,14 @@ public class CommandLineInterface {
         String telNumber = scanner.nextLine();
         return new Order(generatedId, name, lastName, city, postCode, street, homeNumber, telNumber, cartManager);
     }
+
     public void sendOrder() {
         Order createdOrder = createOrder();
         createdOrder.prepareOrderToProcess();
         orderProcessor.processOrder(createdOrder);
         System.out.println("Zamówienie o ID: " + createdOrder.getOrderId() + " zostało złożone");
+        productManager.saveProductsStatusToFileByList(productManager.getProductsInShop(), "existedProducts.csv");
+        clearCart();
     }
 
     public Product findProductMatchingById(String id) {
@@ -94,6 +158,7 @@ public class CommandLineInterface {
     public void adminAddProductToShop() throws DuplicateIdException {
         productManager.addProductToShop();
     }
+
     public void adminRemoveProductFromShop() {
         System.out.println("Podaj ID do usunięcia: ");
         String idToRemove = scanner.nextLine();
@@ -103,6 +168,7 @@ public class CommandLineInterface {
             System.out.println("Niepoprawne ID");
         }
     }
+
     public void adminChangeProductName() {
         System.out.println("Podaj ID do zmiany nazwy");
         String id = scanner.nextLine();
@@ -115,6 +181,7 @@ public class CommandLineInterface {
             System.out.println("Niepoprawne ID");
         }
     }
+
     public void adminChangeProductPrice() {
         System.out.println("Podaj ID do zmiany ceny");
         String id = scanner.nextLine();
@@ -127,6 +194,7 @@ public class CommandLineInterface {
             System.out.println("Niepoprawne ID");
         }
     }
+
     public void adminChangeProductAvailableCount() {
         System.out.println("Podaj ID do zmiany dostępnej ilośći");
         String id = scanner.nextLine();
@@ -139,15 +207,34 @@ public class CommandLineInterface {
             System.out.println("Niepoprawne ID");
         }
     }
+
     public void adminActivatePromotion() {
-        System.out.println("Czy chcesz włączyć rabat 20% na cały koszyk? T/N");
+        System.out.println("Jaką promocję chcesz włączyć?");
+        System.out.println(">>>> WYBIERZ [ 1 ] RABAT [X] % NA CAŁY KOSZYK");
+        System.out.println(">>>> WYBIERZ [ 2 ] RABAT [X] % NA KOSZYK AKTYWOWANY OD [Y] SZT. PRODUKTÓW W KOSZYKU");
+        System.out.println(">>>> WYBIERZ [ 3 ] ABY WYŁĄCZYĆ CAŁKOWICIE");
         String option = scanner.nextLine();
-        if (option.equalsIgnoreCase("t")) {
-            cartManager.setActivatePromotion(true);
-            promotion = true;
-        } else {
-         cartManager.setActivatePromotion(false);
-         promotion = false;
+
+        switch (option) {
+            case "1" -> {
+                System.out.println("Podaj ile % chcesz włączyć");
+                promotionPercentValue = Integer.parseInt(scanner.nextLine());
+                promotion = true;
+                promotionType = "1";
+            }
+            case "2" -> {
+                System.out.println("Podaj ile % chcesz włączyć");
+                promotionPercentValue = Integer.parseInt(scanner.nextLine());
+                System.out.println("Od ilu produktów w koszyku?");
+                promotionProductCountInCart = Integer.parseInt(scanner.nextLine());
+                promotion = true;
+                promotionType = "2";
+            }
+            case "3" -> promotion = false;
+            default -> {
+                System.out.println("Podano niepoprawny znak");
+                adminActivatePromotion();
+            }
         }
     }
 
@@ -160,11 +247,39 @@ public class CommandLineInterface {
         this.promotion = promotion;
     }
 
+    public String getPromotionType() {
+        return promotionType;
+    }
+
+    public void setPromotionType(String promotionType) {
+        this.promotionType = promotionType;
+    }
+
+    public int getPromotionPercentValue() {
+        return promotionPercentValue;
+    }
+
+    public void setPromotionPercentValue(int promotionPercentValue) {
+        this.promotionPercentValue = promotionPercentValue;
+    }
+
+    public int getPromotionProductCountInCart() {
+        return promotionProductCountInCart;
+    }
+
+    public void setPromotionProductCountInCart(int promotionProductCountInCart) {
+        this.promotionProductCountInCart = promotionProductCountInCart;
+    }
+
     public ProductManager getProductManager() {
         return productManager;
     }
 
     public void setProductManager(ProductManager productManager) {
         this.productManager = productManager;
+    }
+
+    public static double getTotalPriceForOrder() {
+        return totalPriceForOrder;
     }
 }

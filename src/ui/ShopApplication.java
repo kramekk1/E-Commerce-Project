@@ -1,6 +1,5 @@
 package ui;
 
-import model.*;
 import service.DuplicateIdException;
 
 import java.util.Scanner;
@@ -10,32 +9,21 @@ public class ShopApplication {
     public static void main(String[] args) throws DuplicateIdException {
 
         CommandLineInterface commandLineInterface = new CommandLineInterface();
+        commandLineInterface.readExistedProductsFromCsvFile();
+        commandLineInterface.readCartStatusFromCsvFile();
 
-        //////////////////////ALREADY EXISTED PRODUCTS////////////////////////////////
-
-        Computer computer1 = new Computer("1", "Komputer stacjonarny", 2000, 50, Processor.NONE, Ram.NONE);
-        commandLineInterface.getProductManager().adminAdd(computer1);
-        Computer computer2 = new Computer("2", "Komputer stacjonarny", 4000, 50, Processor.NONE, Ram.NONE);
-        commandLineInterface.getProductManager().adminAdd(computer2);
-        Computer computer3 = new Computer("3", "Laptop Acer", 4500, 40, Processor.NONE, Ram.NONE);
-        commandLineInterface.getProductManager().adminAdd(computer3);
-        Computer computer4 = new Computer("4", "Laptop Lenovo", 6000, 40, Processor.NONE, Ram.NONE);
-        commandLineInterface.getProductManager().adminAdd(computer4);
-        Smartphone smartphone1 = new Smartphone("5", "iPhone 15", Color.NONE, BatteryCapacity.NONE, Accessories.NONE, 2000, 50);
-        commandLineInterface.getProductManager().adminAdd(smartphone1);
-        Smartphone smartphone2 = new Smartphone("6", "Samsung", Color.NONE, BatteryCapacity.NONE, Accessories.NONE, 3300, 40);
-        commandLineInterface.getProductManager().adminAdd(smartphone2);
-        Electronics electronics1 = new Electronics("7", "Blender Philips", 400, 40);
-        commandLineInterface.getProductManager().adminAdd(electronics1);
-
-        /////////////////////////////////////////////////////////////////////////////
         boolean appRunning = true;
 
         while (appRunning) {
             welcomeInTheShopText();
             if (commandLineInterface.isPromotion()) {
-                System.out.println();
-                System.out.println("AKTYWNY RABAT 20%");
+                if (commandLineInterface.getPromotionType().equals("1")) {
+                    System.out.println();
+                    System.out.println("$$ AKTYWNY RABAT " + commandLineInterface.getPromotionPercentValue() + " % $$");
+                } if (commandLineInterface.getPromotionType().equals("2")) {
+                    System.out.println();
+                    System.out.println("$$ AKTYWNY RABAT " + commandLineInterface.getPromotionPercentValue() + " % OD " + commandLineInterface.getPromotionProductCountInCart() + " PRODUKTÓW W KOSZYKU $$");
+                }
             }
             String option = userInput.nextLine();
 
@@ -43,7 +31,7 @@ public class ShopApplication {
                 case "1" -> commandLineInterface.showShopContent();
                 case "2" -> commandLineInterface.addItemToCart();
                 case "3" -> commandLineInterface.removeItemFromCart();
-                case "4" -> commandLineInterface.clearCart();
+                case "4" -> commandLineInterface.clearCartByUserRequest();
                 case "5" -> commandLineInterface.showItemsInCart();
                 case "6" -> commandLineInterface.orderPaymentInfo();
                 case "7" -> commandLineInterface.sendOrder();

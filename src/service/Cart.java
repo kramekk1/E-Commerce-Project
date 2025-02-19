@@ -5,6 +5,7 @@ import ui.CommandLineInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Cart {
     private List<Product> productsInCart;
@@ -13,8 +14,11 @@ public class Cart {
     }
 
     public void addProductToCart(Product product) {
+        Random randomIdGenerator = new Random();
+        int randomId = randomIdGenerator.nextInt(1000,9999);
+
         if (product instanceof Computer) {
-            Computer computerToAdd = new Computer(product.getId(), product.getName(), product.getPrice(), product.getAvailableCount(),
+            Computer computerToAdd = new Computer(String.valueOf(randomId), product.getName(), product.getPrice(), product.getAvailableCount(),
                     ((Computer) product).getProcessorModel(), ((Computer) product).getRamType());
             System.out.println("WYBÓR PROCESORA: ");
             computerToAdd.setProcessorModel(Processor.config());
@@ -26,7 +30,7 @@ public class Cart {
             productsInCart.add(computerToAdd);
         }
         if (product instanceof Smartphone){
-            Smartphone smartphoneToAdd = new Smartphone(product.getId(), product.getName(), ((Smartphone) product).getColor(),
+            Smartphone smartphoneToAdd = new Smartphone(String.valueOf(randomId), product.getName(), ((Smartphone) product).getColor(),
                     ((Smartphone) product).getBatteryCapacity(), ((Smartphone) product).getAddonAccessory(), product.getPrice(), product.getAvailableCount());
             System.out.println("WYBÓR KOLORU: ");
             smartphoneToAdd.setColor(Color.config());
@@ -40,7 +44,8 @@ public class Cart {
             productsInCart.add(smartphoneToAdd);
         }
         if (product instanceof Electronics) {
-            productsInCart.add(product);
+            Electronics electronicsToAdd = new Electronics(String.valueOf(randomId), product.getName(), product.getPrice(), product.getAvailableCount());
+            productsInCart.add(electronicsToAdd);
         }
     }
 

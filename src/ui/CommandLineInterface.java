@@ -159,10 +159,10 @@ public class CommandLineInterface {
     public void sendOrder() {
         Order createdOrder = createOrder();
         createdOrder.prepareOrderToProcess();
-        orderProcessor.processOrder(createdOrder);
+        orderProcessor.processOrder(createdOrder)
+                        .thenRun(this::clearCart);
         System.out.println("Zamówienie o ID: " + createdOrder.getOrderId() + " zostało złożone");
         productManager.saveProductsStatusToFileByList(productManager.getProductsInShop(), "existedProducts.csv");
-        clearCart();
     }
 
     public Product findProductMatchingById(String id) {
@@ -225,7 +225,7 @@ public class CommandLineInterface {
         if (findProductMatchingById(id) != null) {
             System.out.println("Podaj nową dostępną ilość dla: " + findProductMatchingById(id));
             int newAvailableCount;
-            while (scanner.hasNextInt()) {
+            while (!scanner.hasNextInt()) {
                 System.out.println("To nie jest cyfra, jeszcze raz");
                 scanner.next();
             }

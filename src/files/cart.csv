@@ -1,2 +1,1 @@
 type,id,name,price,availableCount,processor,ramType,color,batteryCapacity,accessories
-Computer,1448,Macbook,7000.0,40,INTEL_I9,GIGABYTE_16GB,,,

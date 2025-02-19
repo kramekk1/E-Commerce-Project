@@ -10,12 +10,11 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class OrderProcessor {
-    private List<Order> placedOrder;
     //private Map<String, String> invoiceMap;
     public Scanner userInput = new Scanner(System.in);
     private final ZonedDateTime zonedDateTime = ZonedDateTime.now();
+
     public OrderProcessor() {
-        placedOrder = new ArrayList<>();
         //invoiceMap = new HashMap<>();
     }
 
@@ -36,28 +35,27 @@ public class OrderProcessor {
                 "=======================================";
     }
 
-    public String generateReceiptForCustomer(Order order) {
-        return "===============PARAGON===============" + "\n" +
-                "Numer zamówienia: " + order.getOrderId() + "\n" +
-                "Data: " + zonedDateTime + "\n" +
-                "---------------------------------------" + "\n" +
-                "Przedmioty: " + order.getCartContent();
-    }
+//    public String generateReceiptForCustomer(Order order) {
+//        return "===============PARAGON===============" + "\n" +
+//                "Numer zamówienia: " + order.getOrderId() + "\n" +
+//                "Data: " + zonedDateTime + "\n" +
+//                "---------------------------------------" + "\n" +
+//                "Przedmioty: " + order.getCartContent();
+//    }
 
-    public void processOrder(Order order) {
-        CompletableFuture.runAsync(() -> {
+    public CompletableFuture<Void> processOrder(Order order) {
+        return CompletableFuture.runAsync(() -> {
             {
-                placedOrder.add(order);
                 savePlacedOrderToFile(order);
-                System.out.println("Czy wygenerować fakturę do zamówienia? Podaj T/N");
-                if (userInput.nextLine().equalsIgnoreCase("t")) {
-                    System.out.println(generateInvoice(order));
-                    //putInvoiceToMap(order);
-                } else {
-                    System.out.println(generateReceiptForCustomer(order));
-                }
+                System.out.println("Generuję fakturę...");
+//                if (userInput.nextLine().equalsIgnoreCase("t")) {
+                System.out.println(generateInvoice(order));
+//                    putInvoiceToMap(order);
+//                } else {
+//                    System.out.println(generateReceiptForCustomer(order));
+//                }
             }
-        }).join();
+        });
     }
 
     public void savePlacedOrderToFile(Order order) {
@@ -93,15 +91,6 @@ public class OrderProcessor {
 //            }
 //        }
 //    }
-
-    public List<Order> getPlacedOrder() {
-        return placedOrder;
-    }
-
-    public void setPlacedOrder(List<Order> placedOrder) {
-        this.placedOrder = placedOrder;
-    }
-
 //    public Map<String, String> getInvoiceMap() {
 //        return invoiceMap;
 //    }

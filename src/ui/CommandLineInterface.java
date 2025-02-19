@@ -3,6 +3,9 @@ package ui;
 import model.Product;
 import service.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -131,11 +134,26 @@ public class CommandLineInterface {
         System.out.println("Podaj ulicę");
         String street = scanner.nextLine();
         System.out.println("Podaj numer domu/mieszkania");
-        int homeNumber = scanner.nextInt();
+        int homeNumber;
+        while (!scanner.hasNextInt()) {
+            System.out.println("Numer domu powinien być cyfrą");
+            scanner.next();
+        }
+        homeNumber = scanner.nextInt();
         System.out.println("Podaj numer telefonu");
         scanner.nextLine();
         String telNumber = scanner.nextLine();
-        return new Order(generatedId, name, lastName, city, postCode, street, homeNumber, telNumber, cartManager);
+
+        System.out.println("Potwierdzasz składanie zamówienie z podaniem prawidłowych danych czy chcesz anulować?");
+        System.out.println("WYBIERZ [ 1 ] ABY POTWIERDZIĆ");
+        System.out.println("WYBIERZ [ 2 ] ABY ANULOWAĆ");
+        System.out.println("WYBIERZ [ 3 ] ABY ZACZĄĆ OD POCZĄTKU");
+        String option = scanner.nextLine();
+        return switch (option){
+            case "1" -> new Order(generatedId, name, lastName, city, postCode, street, homeNumber, telNumber, cartManager);
+            case "2" -> null;
+            default -> createOrder();
+        };
     }
 
     public void sendOrder() {
@@ -188,7 +206,12 @@ public class CommandLineInterface {
 
         if (findProductMatchingById(id) != null) {
             System.out.println("Podaj nową cenę dla: " + findProductMatchingById(id));
-            double newPrice = scanner.nextDouble();
+            double newPrice;
+            while (!scanner.hasNextDouble()) {
+                System.out.println("To nie jest cyfra, jeszcze raz");
+                scanner.next();
+            }
+            newPrice = scanner.nextDouble();
             productManager.updateProductPriceById(id, newPrice);
         } else {
             System.out.println("Niepoprawne ID");
@@ -201,7 +224,12 @@ public class CommandLineInterface {
 
         if (findProductMatchingById(id) != null) {
             System.out.println("Podaj nową dostępną ilość dla: " + findProductMatchingById(id));
-            int newAvailableCount = scanner.nextInt();
+            int newAvailableCount;
+            while (scanner.hasNextInt()) {
+                System.out.println("To nie jest cyfra, jeszcze raz");
+                scanner.next();
+            }
+            newAvailableCount = scanner.nextInt();
             productManager.updateProductAvailableCountById(id, newAvailableCount);
         } else {
             System.out.println("Niepoprawne ID");
@@ -218,23 +246,59 @@ public class CommandLineInterface {
         switch (option) {
             case "1" -> {
                 System.out.println("Podaj ile % chcesz włączyć");
-                promotionPercentValue = Integer.parseInt(scanner.nextLine());
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest cyfra, jeszcze raz");
+                    scanner.next();
+                }
+                promotionPercentValue = scanner.nextInt();
                 promotion = true;
                 promotionType = "1";
+                productManager.savePromotionToFile(promotion, promotionPercentValue, 0, promotionType);
             }
             case "2" -> {
                 System.out.println("Podaj ile % chcesz włączyć");
-                promotionPercentValue = Integer.parseInt(scanner.nextLine());
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest cyfra, jeszcze raz");
+                    scanner.next();
+                }
+                promotionPercentValue = scanner.nextInt();
+
                 System.out.println("Od ilu produktów w koszyku?");
-                promotionProductCountInCart = Integer.parseInt(scanner.nextLine());
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest cyfra, jeszcze raz");
+                    scanner.next();
+                }
+                promotionProductCountInCart = scanner.nextInt();
                 promotion = true;
                 promotionType = "2";
+                productManager.savePromotionToFile(promotion, promotionPercentValue, promotionProductCountInCart, promotionType);
             }
-            case "3" -> promotion = false;
+            case "3" -> {
+                promotion = false;
+                productManager.savePromotionToFile(promotion, 0, 0, "0");
+            }
             default -> {
                 System.out.println("Podano niepoprawny znak");
                 adminActivatePromotion();
             }
+        }
+    }
+    public void readPromoStatusFromFile() {
+        String promoFilePath = "src/files/promotion.csv";
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(promoFilePath))){
+            bufferedReader.readLine();
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] values = line.split(",");
+                setPromotion(Boolean.parseBoolean(values[0]));
+                setPromotionPercentValue(Integer.parseInt(values[1]));
+                setPromotionProductCountInCart(Integer.parseInt(values[2]));
+                setPromotionType(values[3]);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 

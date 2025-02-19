@@ -11,6 +11,7 @@ public class ShopApplication {
         CommandLineInterface commandLineInterface = new CommandLineInterface();
         commandLineInterface.readExistedProductsFromCsvFile();
         commandLineInterface.readCartStatusFromCsvFile();
+        commandLineInterface.readPromoStatusFromFile();
 
         boolean appRunning = true;
 

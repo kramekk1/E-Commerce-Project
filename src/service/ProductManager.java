@@ -1,6 +1,7 @@
 package service;
 
 import model.*;
+import ui.CommandLineInterface;
 
 import java.io.*;
 import java.util.*;
@@ -36,6 +37,7 @@ public class ProductManager {
             System.out.println(e.getMessage());
         }
     }
+
     public void readCartStatusFromFile(List<Product> products, String fileName) {
         String filePath = "src/files/" + fileName;
 
@@ -56,6 +58,21 @@ public class ProductManager {
                     products.add(new Electronics(values[1], values[2], priceFromStringToDouble, availableCountFromStringToInt));
                 }
             }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void savePromotionToFile(boolean promo, int promoPercent, int promoCount, String promoType) {
+        String promoFilePath = "src/files/promotion.csv";
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(promoFilePath))) {
+            bufferedWriter.write("promotion,promotionPercentValue,promotionProductCountInCart,promotionType");
+            bufferedWriter.newLine();
+            bufferedWriter.write(String.join(",",
+                    String.valueOf(promo),
+                    String.valueOf(promoPercent),
+                    String.valueOf(promoCount),
+                    promoType));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -106,6 +123,7 @@ public class ProductManager {
             detailedCartStatusSave(products, fileName);
         }
     }
+
     public void detailedCartStatusSave(List<Product> products, String fileName) {
         String filePath = "src/files/" + fileName;
 
@@ -177,10 +195,22 @@ public class ProductManager {
         String id = String.valueOf(idIntValue);
         System.out.println("Podaj nazwe: ");
         String name = userInput.nextLine();
+
         System.out.println("Podaj cenę: ");
-        double price = userInput.nextDouble();
+        double price;
+        while (!userInput.hasNextDouble()) {
+            System.out.println("To nie jest cyfra, jeszcze raz");
+            userInput.next();
+        }
+        price = userInput.nextDouble();
+
         System.out.println("Podaj liczbę sztuk: ");
-        int availableCount = userInput.nextInt();
+        int availableCount;
+        while (!userInput.hasNextInt()) {
+            System.out.println("To nie jest cyfra, jeszcze raz");
+            userInput.next();
+        }
+        availableCount = userInput.nextInt();
 
         System.out.println("Komputer, Smartfon czy Elektronika?");
         userInput.nextLine();

@@ -1,6 +1,6 @@
 package ui;
 
-import service.DuplicateIdException;
+import exception.DuplicateIdException;
 
 import java.util.Scanner;
 

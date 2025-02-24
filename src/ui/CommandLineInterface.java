@@ -1,5 +1,8 @@
 package ui;
 
+import exception.DuplicateIdException;
+import model.Cart;
+import model.Order;
 import model.Product;
 import service.*;
 
@@ -333,14 +336,6 @@ public class CommandLineInterface {
 
     public void setPromotionProductCountInCart(int promotionProductCountInCart) {
         this.promotionProductCountInCart = promotionProductCountInCart;
-    }
-
-    public ProductManager getProductManager() {
-        return productManager;
-    }
-
-    public void setProductManager(ProductManager productManager) {
-        this.productManager = productManager;
     }
 
     public static double getTotalPriceForOrder() {

@@ -1,7 +1,7 @@
 package service;
 
+import exception.DuplicateIdException;
 import model.*;
-import ui.CommandLineInterface;
 
 import java.io.*;
 import java.util.*;
@@ -290,7 +290,4 @@ public class ProductManager {
         return productsInShop;
     }
 
-    public void setProductsInShop(List<Product> productsInShop) {
-        this.productsInShop = productsInShop;
-    }
 }

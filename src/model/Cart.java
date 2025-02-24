@@ -1,7 +1,4 @@
-package service;
-
-import model.*;
-import ui.CommandLineInterface;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,10 +61,6 @@ public class Cart {
 
     public List<Product> getProductsInCart() {
         return productsInCart;
-    }
-
-    public void setProductsInCart(List<Product> productsInCart) {
-        this.productsInCart = productsInCart;
     }
 
 }

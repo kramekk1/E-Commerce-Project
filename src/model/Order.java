@@ -1,4 +1,4 @@
-package service;
+package model;
 
 import ui.CommandLineInterface;
 
@@ -46,71 +46,36 @@ public class Order {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
     public String getCustomerFirstName() {
         return customerFirstName;
-    }
-
-    public void setCustomerFirstName(String customerFirstName) {
-        this.customerFirstName = customerFirstName;
     }
 
     public String getCustomerLastName() {
         return customerLastName;
     }
 
-    public void setCustomerLastName(String customerLastName) {
-        this.customerLastName = customerLastName;
-    }
-
     public String getDestinationCity() {
         return destinationCity;
-    }
-
-    public void setDestinationCity(String destinationCity) {
-        this.destinationCity = destinationCity;
     }
 
     public String getPostCode() {
         return postCode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
     public String getStreet() {
         return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
     }
 
     public int getHomeNumber() {
         return homeNumber;
     }
 
-    public void setHomeNumber(int homeNumber) {
-        this.homeNumber = homeNumber;
-    }
-
     public String getTelephoneNumber() {
         return telephoneNumber;
-    }
-
-    public void setTelephoneNumber(String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
     }
 
     public Cart getCartContent() {
         return cartContent;
     }
 
-    public void setCartContent(Cart cartContent) {
-        this.cartContent = cartContent;
-    }
 }
